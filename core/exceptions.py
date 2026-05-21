@@ -37,3 +37,18 @@ class HTTPStatus(IntEnum):
 
 class Route66Error(Exception):
     """Base para todas as exceções do framework."""
+
+class HTTPException(Route66Error):
+    def __init__(self, status: HTTPStatus, detail: str):
+        self.status = status
+        self.detail = detail
+        super().__init__(detail)
+
+class NotFoundError(HTTPException):
+    def __init__(self, detail: str="Not Found"):
+        super().__init__(HTTPStatus.NOT_FOUND, detail)
+
+class MethodNotAllowedError(HTTPException):
+    def __init__(self, detail: str = "Not Allowed", allowed: list[str] | None = None):
+        self.allowed_methods = allowed
+        super().__init__(HTTPStatus.METHOD_NOT_ALLOWED, detail)
